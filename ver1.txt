@@ -1,0 +1,103 @@
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cctype>
+using namespace std;
+
+int inc_count(string s,string W);
+
+vector<string> slicer(string s);
+
+int main()
+{
+    string s = "";
+    string W = "";
+    int count = 0;
+
+    ifstream file("TEST2.txt");
+
+    if (!file.is_open())
+    {
+        cerr << "FILE OPEN MISSED!" << endl;
+        return 1;
+    }
+
+    getline(file,W);
+    
+    while(getline(file,s))
+    {   
+        count += inc_count(s,W);
+
+        if(s == "END_OF_TEXT")
+        {
+            break;
+        }   
+    }
+
+    file.close();
+
+    cout << count <<endl;
+
+    return 0;
+}
+
+int inc_count(string s,string W)
+{
+    int count = 0;
+
+    vector<string> X = slicer(s);
+
+    X = slicer(s);
+
+    for(int i = 0;i < X.size();++i)
+    {
+        if(X[i].size() == W.size())
+        {
+            bool t;
+
+            t = true;
+
+            for(int j = 0;j < W.size();++j)
+            {
+                t = t && (tolower(X[i][j]) == tolower(W[j]));
+            }
+
+            if(t)
+            {
+                count++;
+            }
+        }
+    }
+
+    return count;
+}
+
+vector<string> slicer(string s)
+{
+    vector<string> X(1000,"");
+    string word = "";
+
+    for(char c : s)
+    {
+        if(!isspace(c))
+        {
+            word += c;
+        }
+        else
+        {
+            if(!word.empty())
+            {
+                X.push_back(word);
+                word = "";
+            }
+        }
+    }
+
+    if(!word.empty())
+    {
+        X.push_back(word);
+    }
+
+    return X;
+}
